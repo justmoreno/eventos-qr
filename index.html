@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Noche de Rock 80s</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+<main class="container">
+
+    <!-- INFO EVENTO -->
+    <section class="video-section">
+
+        <h1>Noche de Rock 80s</h1>
+        <p class="subtitulo">
+            Glam, New Wave, Post-Punk, Synth-pop, Punk Rock, Classic
+        </p>
+
+        <p class="event-info">
+            Noir Antre Eventos, Jr Caylloma 660, Centro de Lima<br>
+            Sábado 21/02 · 10pm a 6am
+        </p>
+
+        <div class="video-wrapper">
+            <video controls playsinline>
+                <source src="promo.mp4" type="video/mp4">
+            </video>
+        </div>
+    </section>
+
+    <!-- FORM -->
+    <section class="form-section">
+        <h2>Entrada Gratis (QR)</h2>
+
+        <form id="registroForm">
+
+            <label>Nombre y Apellido *</label>
+            <input type="text" id="nombre" required>
+
+            <label>Número de WhatsApp *</label>
+            <input type="tel" id="whatsapp" required>
+
+            <label>¿Perteneces al Club Lima Rock Party? *</label>
+            <div class="radio-group">
+                <label><input type="radio" name="club" value="si" required> Sí</label>
+                <label><input type="radio" name="club" value="no"> No</label>
+            </div>
+
+            <button type="submit">OBTENER MI QR</button>
+        </form>
+    </section>
+
+</main>
+
+<!-- MODAL QR -->
+<div class="modal hidden" id="qrModal">
+    <div class="modal-content">
+
+        <h2>Aquí tienes tu entrada gratis</h2>
+        <p class="modal-subtitle">Guárdala o toma captura</p>
+
+        <p class="qr-validez">Entrada válida hasta la medianoche del Sábado 21/02</p>
+
+        <div class="qr-nombre" id="qrNombre"></div>
+
+        <canvas id="qrCanvas"></canvas>
+
+        <p class="qr-info">Noir Antre Eventos, Jr Caylloma 660, C. de Lima</p>
+        <p class="qr-info">10pm a 6am</p>
+        <p class="qr-info">Ingreso después de medianoche: S/15</p>
+
+        <button class="close-btn" onclick="cerrarModal()">Cerrar</button>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/qrious/dist/qrious.min.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
