@@ -19,28 +19,59 @@ const db = getFirestore(app);
 console.log("🔥 Firebase conectado correctamente");
 
 // --------------------------------------------------
-// TU CÓDIGO EXISTENTE (SIN CAMBIOS)
+// UTILIDAD: GENERAR ID ÚNICO
 // --------------------------------------------------
+function generarIdUnico() {
+    const fecha = new Date();
+    const y = fecha.getFullYear();
+    const m = String(fecha.getMonth() + 1).padStart(2, "0");
+    const d = String(fecha.getDate()).padStart(2, "0");
+    const random = Math.random().toString(36).substring(2, 7).toUpperCase();
 
+    return `LRP-${y}${m}${d}-${random}`;
+}
+
+// --------------------------------------------------
+// DOM
+// --------------------------------------------------
 const form = document.getElementById("registroForm");
 const modal = document.getElementById("qrModal");
 const qrCanvas = document.getElementById("qrCanvas");
 const qrNombre = document.getElementById("qrNombre");
 
-form.addEventListener("submit", function(e) {
+// --------------------------------------------------
+// SUBMIT
+// --------------------------------------------------
+form.addEventListener("submit", function (e) {
     e.preventDefault();
 
     const nombre = document.getElementById("nombre").value.trim();
     const whatsapp = document.getElementById("whatsapp").value.trim();
-    const club = document.querySelector('input[name="club"]:checked');
+    const clubInput = document.querySelector('input[name="club"]:checked');
 
-    if (!nombre || !whatsapp || !club) {
+    if (!nombre || !whatsapp || !clubInput) {
         alert("Todos los campos son obligatorios");
         return;
     }
 
+    const club = clubInput.value;
+    const idUnico = generarIdUnico();
+
+    const registro = {
+        id_unico: idUnico,
+        nombre,
+        whatsapp,
+        club,
+        evento: "Noche de Rock 80s",
+        fecha_registro: new Date(),
+        usado: false
+    };
+
+    console.log("📦 Registro preparado:", registro);
+
     const qrTexto =
-`Entrada válida hasta la medianoche del Sábado 21/02
+`ID: ${idUnico}
+Entrada válida hasta la medianoche del Sábado 21/02
 ${nombre}
 Noir Antre Eventos, Jr Caylloma 660, C. de Lima
 10pm a 6am
@@ -58,6 +89,12 @@ Ingreso después de medianoche: S/15`;
     form.reset();
 });
 
+// --------------------------------------------------
+// MODAL
+// --------------------------------------------------
 function cerrarModal() {
     modal.classList.add("hidden");
 }
+
+// 👇 CLAVE PARA type="module"
+window.cerrarModal = cerrarModal;
