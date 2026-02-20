@@ -63,8 +63,8 @@ form.addEventListener("submit", async function (e) {
 
     const registro = {
         id_unico: idUnico,
-        nombre,
-        whatsapp,
+        nombre: nombre,
+        whatsapp: whatsapp,
         evento: "Noche de Rock 80s",
         fecha_registro: new Date(),
         usado: false
@@ -73,7 +73,6 @@ form.addEventListener("submit", async function (e) {
     try {
         const coleccion = club === "si" ? "club" : "no_club";
         await setDoc(doc(db, coleccion, idUnico), registro);
-
         console.log(`✅ Guardado en colección: ${coleccion}`, registro);
     } catch (error) {
         console.error("❌ Error al guardar en Firestore:", error);
@@ -81,13 +80,10 @@ form.addEventListener("submit", async function (e) {
         return;
     }
 
-    const qrTexto =
-`ID: ${idUnico}
-Entrada válida hasta la medianoche del Sábado 21/02
-${nombre}
-Noir Antre Eventos, Jr Caylloma 660, C. de Lima
-10pm a 6am
-Ingreso después de medianoche: S/15`;
+    // --------------------------------------------------
+    // QR (SOLO ID TÉCNICO)
+    // --------------------------------------------------
+    const qrTexto = `NOIR-ANTRE|${idUnico}`;
 
     qrNombre.textContent = nombre;
 
