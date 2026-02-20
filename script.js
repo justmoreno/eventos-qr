@@ -1,3 +1,27 @@
+// 🔥 FIREBASE (CDN - MÓDULOS)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+// 🔐 CONFIGURACIÓN DE TU PROYECTO
+const firebaseConfig = {
+  apiKey: "AIzaSyCUHviln75IA6pMuJWiP_IrlAaSECTsFDM",
+  authDomain: "noche-rock-80s.firebaseapp.com",
+  projectId: "noche-rock-80s",
+  storageBucket: "noche-rock-80s.firebasestorage.app",
+  messagingSenderId: "345121447905",
+  appId: "1:345121447905:web:9f16160534cb00db423ca0"
+};
+
+// 🚀 INICIALIZAR FIREBASE
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+console.log("🔥 Firebase conectado correctamente");
+
+// --------------------------------------------------
+// TU CÓDIGO EXISTENTE (SIN CAMBIOS)
+// --------------------------------------------------
+
 const form = document.getElementById("registroForm");
 const modal = document.getElementById("qrModal");
 const qrCanvas = document.getElementById("qrCanvas");
