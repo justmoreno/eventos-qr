@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Dashboard Ingresos - Noir Antre</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  background:#000;
+  color:#fff;
+  font-family: Arial, sans-serif;
+  text-align:center;
+  padding:20px;
+}
+.box {
+  border:1px solid #333;
+  padding:20px;
+  margin:15px auto;
+  max-width:320px;
+  font-size:22px;
+}
+.green { color:#00ff88; }
+.blue { color:#5da9ff; }
+.gray { color:#aaa; }
+</style>
+</head>
+
+<body>
+
+<h1>📊 Ingresos en Tiempo Real</h1>
+
+<div class="box green">Ingresos Totales: <span id="total">0</span></div>
+<div class="box green">Club Ingresados: <span id="club">0</span></div>
+<div class="box blue">No Club Ingresados: <span id="noClub">0</span></div>
+<div class="box gray">Pendientes de Ingreso: <span id="pendientes">0</span></div>
+
+<script type="module" src="dashboard.js"></script>
+</body>
+</html>
