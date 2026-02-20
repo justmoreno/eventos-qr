@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Export - Noche Rock 80s</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<h1>Exportar Registros</h1>
+
+<button onclick="exportar('club')">Descargar CSV Club</button>
+<button onclick="exportar('no_club')">Descargar CSV No Club</button>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+// 🔐 Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCUHviln75IA6pMuJWiP_IrlAaSECTsFDM",
+  authDomain: "noche-rock-80s.firebaseapp.com",
+  projectId: "noche-rock-80s",
+  storageBucket: "noche-rock-80s.firebasestorage.app",
+  messagingSenderId: "345121447905",
+  appId: "1:345121447905:web:9f16160534cb00db423ca0"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+window.exportar = async function (coleccionNombre) {
+  const snapshot = await getDocs(collection(db, coleccionNombre));
+  let csv = "id_unico,nombre,whatsapp,evento,fecha_registro,usado\n";
+
+  snapshot.forEach(doc => {
+    const d = doc.data();
+    csv += `"${doc.id}","${d.nombre}","${d.whatsapp}","${d.evento}","${d.fecha_registro?.toDate()}","${d.usado}"\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `${coleccionNombre}_noche_rock_80s.csv`;
+  a.click();
+
+  URL.revokeObjectURL(url);
+};
+</script>
+
+</body>
+</html>
