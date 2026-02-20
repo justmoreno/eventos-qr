@@ -19,21 +19,7 @@ const db = getFirestore(app);
 console.log("🔥 Firebase conectado correctamente");
 
 // --------------------------------------------------
-// UTILIDAD: GENERAR ID ÚNICO
-// --------------------------------------------------
-function generarIdUnico() {
-    const fecha = new Date();
-    const y = fecha.getFullYear();
-    const m = String(fecha.getMonth() + 1).padStart(2, "0");
-    const d = String(fecha.getDate()).padStart(2, "0");
-
-    const random = Math.random().toString(36).substring(2, 7).toUpperCase();
-
-    return `LRP-${y}${m}${d}-${random}`;
-}
-
-// --------------------------------------------------
-// TU CÓDIGO EXISTENTE (CON ESTRUCTURA DE DATOS)
+// TU CÓDIGO EXISTENTE (SIN CAMBIOS)
 // --------------------------------------------------
 
 const form = document.getElementById("registroForm");
@@ -46,33 +32,15 @@ form.addEventListener("submit", function(e) {
 
     const nombre = document.getElementById("nombre").value.trim();
     const whatsapp = document.getElementById("whatsapp").value.trim();
-    const clubInput = document.querySelector('input[name="club"]:checked');
+    const club = document.querySelector('input[name="club"]:checked');
 
-    if (!nombre || !whatsapp || !clubInput) {
+    if (!nombre || !whatsapp || !club) {
         alert("Todos los campos son obligatorios");
         return;
     }
 
-    const club = clubInput.value; // "si" o "no"
-    const idUnico = generarIdUnico();
-
-    // 📦 OBJETO DE REGISTRO (LISTO PARA FIRESTORE)
-    const registro = {
-        id_unico: idUnico,
-        nombre: nombre,
-        whatsapp: whatsapp,
-        club: club,
-        evento: "Noche de Rock 80s",
-        fecha_registro: new Date(),
-        usado: false
-    };
-
-    console.log("📦 Registro preparado:", registro);
-
-    // 📲 CONTENIDO DEL QR (incluye ID interno)
     const qrTexto =
-`ID: ${idUnico}
-Entrada válida hasta la medianoche del Sábado 21/02
+`Entrada válida hasta la medianoche del Sábado 21/02
 ${nombre}
 Noir Antre Eventos, Jr Caylloma 660, C. de Lima
 10pm a 6am
