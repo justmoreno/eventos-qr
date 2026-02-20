@@ -1,6 +1,10 @@
 // 🔥 FIREBASE (CDN - MÓDULOS)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+import {
+    getFirestore,
+    doc,
+    setDoc
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
 // 🔐 CONFIGURACIÓN DE TU PROYECTO
 const firebaseConfig = {
@@ -42,7 +46,7 @@ const qrNombre = document.getElementById("qrNombre");
 // --------------------------------------------------
 // SUBMIT
 // --------------------------------------------------
-form.addEventListener("submit", function (e) {
+form.addEventListener("submit", async function (e) {
     e.preventDefault();
 
     const nombre = document.getElementById("nombre").value.trim();
@@ -54,20 +58,28 @@ form.addEventListener("submit", function (e) {
         return;
     }
 
-    const club = clubInput.value;
+    const club = clubInput.value; // "si" | "no"
     const idUnico = generarIdUnico();
 
     const registro = {
         id_unico: idUnico,
         nombre,
         whatsapp,
-        club,
         evento: "Noche de Rock 80s",
         fecha_registro: new Date(),
         usado: false
     };
 
-    console.log("📦 Registro preparado:", registro);
+    try {
+        const coleccion = club === "si" ? "club" : "no_club";
+        await setDoc(doc(db, coleccion, idUnico), registro);
+
+        console.log(`✅ Guardado en colección: ${coleccion}`, registro);
+    } catch (error) {
+        console.error("❌ Error al guardar en Firestore:", error);
+        alert("Error al registrar. Intenta nuevamente.");
+        return;
+    }
 
     const qrTexto =
 `ID: ${idUnico}
@@ -96,5 +108,4 @@ function cerrarModal() {
     modal.classList.add("hidden");
 }
 
-// 👇 CLAVE PARA type="module"
 window.cerrarModal = cerrarModal;
