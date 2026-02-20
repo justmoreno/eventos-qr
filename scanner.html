@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Ingreso - Noche Rock 80s</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+body {
+  background:#000;
+  color:#fff;
+  font-family: Arial, sans-serif;
+  text-align:center;
+}
+#resultado {
+  margin-top:20px;
+  font-size:18px;
+}
+.ok { color:#00ff88; }
+.error { color:#ff4d4d; }
+</style>
+</head>
+<body>
+
+<h1>Escanear QR</h1>
+<video id="video" width="300" height="300" autoplay></video>
+<div id="resultado"></div>
+
+<script src="https://unpkg.com/jsqr/dist/jsQR.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-app.js";
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  updateDoc
+} from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+// 🔐 Firebase
+const firebaseConfig = {
+  apiKey: "AIzaSyCUHviln75IA6pMuJWiP_IrlAaSECTsFDM",
+  authDomain: "noche-rock-80s.firebaseapp.com",
+  projectId: "noche-rock-80s",
+  storageBucket: "noche-rock-80s.firebasestorage.app",
+  messagingSenderId: "345121447905",
+  appId: "1:345121447905:web:9f16160534cb00db423ca0"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const video = document.getElementById("video");
+const resultado = document.getElementById("resultado");
+
+navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+.then(stream => {
+  video.srcObject = stream;
+});
+
+const canvas = document.createElement("canvas");
+const ctx = canvas.getContext("2d");
+
+setInterval(async () => {
+  if (video.readyState !== video.HAVE_ENOUGH_DATA) return;
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  ctx.drawImage(video, 0, 0);
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const code = jsQR(imageData.data, canvas.width, canvas.height);
+
+  if (code) {
+    const texto = code.data;
+    const match = texto.match(/ID:\s*(LRP-[A-Z0-9\-]+)/);
+
+    if (!match) {
+      resultado.innerHTML = "<span class='error'>QR inválido</span>";
+      return;
+    }
+
+    const id = match[1];
+    await validarIngreso(id);
+  }
+}, 1000);
+
+async function validarIngreso(id) {
+  const rutas = ["club", "no_club"];
+
+  for (const col of rutas) {
+    const ref = doc(db, col, id);
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      const data = snap.data();
+
+      if (data.usado) {
+        resultado.innerHTML = "<span class='error'>QR YA USADO</span>";
+        return;
+      }
+
+      await updateDoc(ref, { usado: true });
+
+      resultado.innerHTML = `<span class='ok'>
+        INGRESO PERMITIDO<br>${data.nombre}
+      </span>`;
+      return;
+    }
+  }
+
+  resultado.innerHTML = "<span class='error'>QR NO REGISTRADO</span>";
+}
+</script>
+
+</body>
+</html>
